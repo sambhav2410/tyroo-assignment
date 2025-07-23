@@ -1,0 +1,58 @@
+import sqlite3
+
+def create_database():
+    try:
+        conn = sqlite3.connect('products.db')
+        cursor = conn.cursor()
+
+        schema = """
+         CREATE TABLE IF NOT EXISTS products (
+                platform_commission_rate REAL,
+                venture_category3_name_en TEXT,
+                product_small_img TEXT,
+                deeplink TEXT,
+                availability TEXT,
+                image_url_5 TEXT,
+                number_of_reviews INTEGER,
+                is_free_shipping INTEGER,
+                promotion_price REAL,
+                venture_category2_name_en TEXT,
+                current_price REAL,
+                product_medium_img TEXT,
+                venture_category1_name_en TEXT,
+                brand_name TEXT,
+                image_url_4 TEXT,
+                description TEXT,
+                seller_url TEXT,
+                product_commission_rate REAL,
+                product_name TEXT,
+                sku_id TEXT,
+                seller_rating REAL,
+                bonus_commission_rate REAL,
+                business_type TEXT,
+                business_area TEXT,
+                image_url_2 TEXT,
+                discount_percentage REAL,
+                seller_name TEXT,
+                product_url TEXT,
+                product_id TEXT,
+                venture_category_name_local TEXT,
+                rating_avg_value REAL,
+                product_big_img TEXT,
+                image_url_3 TEXT,
+                price REAL,
+                UNIQUE(product_id, sku_id)
+            );
+        """
+
+        cursor.execute(schema)
+        conn.commit()
+        print("Database 'products.db' and 'products' table created successfully.")
+
+    except sqlite3.Error as e:
+        print(f"Error {e}")
+    finally:
+        conn.close()
+
+if __name__ == "__main__":
+    create_database()
