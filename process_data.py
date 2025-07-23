@@ -19,7 +19,7 @@ from urllib3.util.retry import Retry
 
 
 logging.basicConfig(
-    filename='csv_processing.log',
+    filename='logs/csv_processing.log',
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
@@ -80,40 +80,24 @@ def store_chunk(df):
     try:
         logging.info(f"Before insertion: {len(df)} rows in chunk")
         with DB_LOCK:
-            conn = sqlite3.connect(DB_NAME, check_same_thread=False, timeout=30)
-            cursor = conn.cursor()
-            
-           
-            cursor.execute("PRAGMA synchronous = OFF;")
-            cursor.execute("PRAGMA cache_size = -20000;")  
-       
-            columns = df.columns.tolist()
-            placeholders = ','.join(['?' for _ in columns])
-            query = f"INSERT OR IGNORE INTO products ({','.join(columns)}) VALUES ({placeholders})"
-            
-           
-            records = [tuple(row) for row in df.to_numpy()]
-            
-       
-            batch_size = 100
-            for i in range(0, len(records), batch_size):
-                cursor.executemany(query, records[i:i + batch_size])
-            
-            conn.commit()
-            conn.close()
-            logging.info(f"Stored {len(df)} rows to database")
-            
-      
-            conn = sqlite3.connect(DB_NAME)
-            cursor = conn.cursor()
-            cursor.execute("SELECT COUNT(*) FROM products")
-            count = cursor.fetchone()[0]
-            logging.info(f"After insertion: {count} rows in database")
-            conn.close()
+            with sqlite3.connect(DB_NAME, check_same_thread=False, timeout=30) as conn:
+                cursor = conn.cursor()
+                cursor.execute("PRAGMA synchronous = OFF;")
+                cursor.execute("PRAGMA cache_size = -20000;")
+                columns = df.columns.tolist()
+                placeholders = ','.join(['?' for _ in columns])
+                query = f"INSERT OR IGNORE INTO products ({','.join(columns)}) VALUES ({placeholders})"
+                records = [tuple(row) for row in df.to_numpy()]
+                batch_size = 100
+                for i in range(0, len(records), batch_size):
+                    cursor.executemany(query, records[i:i + batch_size])
+                conn.commit()
+                logging.info(f"Stored {len(df)} rows to database")
+                cursor.execute("SELECT COUNT(*) FROM products")
+                count = cursor.fetchone()[0]
+                logging.info(f"After insertion: {count} rows in database")
     except Exception as e:
         logging.error(f"Error storing chunk to database: {str(e)}")
-        if 'conn' in locals():
-            conn.close()
 
 def check_existing_data(conn):
     try:

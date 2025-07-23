@@ -9,13 +9,15 @@ This project provides an optimized Python script for processing a large CSV file
   - pandas
   - sqlite3 (included with Python)
   - urllib3
+  - requests
+  - tqdm
 - Internet connection to download the CSV file
 
 ## Setup Instructions
 1. Clone or download this repository to your local machine.
 2. Install the required Python packages:
    ```bash
-   pip install pandas urllib3 
+   pip install pandas urllib3 requests tqdm 
 
 ## Execution Instructions
 1. First Run python create_db.py to create database and table

@@ -41,7 +41,7 @@ def create_database():
                 product_big_img TEXT,
                 image_url_3 TEXT,
                 price REAL,
-                UNIQUE(product_id, sku_id)
+                PRIMARY KEY (product_id, sku_id)
             );
         """
 
