@@ -1,4 +1,5 @@
 import sqlite3
+#pull-sense please review
 
 def check_database():
     try:
@@ -9,7 +10,7 @@ def check_database():
         count = cursor.fetchone()[0]
         print(f"Total rows in products table: {count}")
         
-        cursor.execute("SELECT product_id, sku_id, product_name, seller_name FROM products LIMIT 5")
+        # cursor.execute("SELECT product_id, sku_id, product_name, seller_name FROM products LIMIT 5")
         rows = cursor.fetchall()
         print("\nSample data (first 5 rows):")
         for row in rows:
