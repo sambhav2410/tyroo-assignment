@@ -2,8 +2,9 @@ import sqlite3
 
 def check_database():
     try:
+
         print("\nSample data (first 5 rows):")
-        for row in rows:
+        for row in:
             print(row)
             
         conn.close()
